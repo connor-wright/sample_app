@@ -15,6 +15,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
       }
     end
     assert_template 'users/new'
+    assert_not is_logged_in?
     assert_select 'div#error_explanation'
     assert_select 'div.alert'
   end
@@ -28,6 +29,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                         password_confirmation: "password"
       }}
     end
+    assert is_logged_in?
     follow_redirect!
     assert_template 'users/show'
     assert_not flash.empty?
