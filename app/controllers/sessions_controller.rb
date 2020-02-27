@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     if @user&.authenticate(params[:session][:password])
       log_in @user
       params[:session][:remember_me] == '1' ? remember(@user): forget(@user)
-      redirect_to @user
+      redirect_back_or @user
     else
       #contents of flash persist for one request it will last
       #for a request after render. Need to use flash.now
