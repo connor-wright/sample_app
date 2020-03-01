@@ -3,7 +3,7 @@
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <%= form_width(model: @user, url: password_reset_path(params[:id]),
+    <%= form_with(model: @user, url: password_reset_path(params[:id]),
                    local: true) do |f| %>
       <%= render 'shared/error_messages' %>
       

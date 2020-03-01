@@ -25,9 +25,11 @@ class PasswordResetsController < ApplicationController
   def update
     if params[:user][:password].empty?
       @user.errors.add(:password, "cant be empty")
-      rednder 'edit'
+      render 'edit'
     elsif @user.update(user_params)
       log_in @user
+      # clear out digest after successful update
+      @user.update_attribute(:reset_digest, nil)
       flash[:success] = "Password has been reset"
       redirect_to @user
     else
@@ -35,11 +37,13 @@ class PasswordResetsController < ApplicationController
     end
   end
   
-  def password_reset_expired?
-    reset_sent_at < 2.hours.ago
-  end
-  
   private
+  
+  # Before filters
+  
+  def user_params
+    params.require(:user).permit(:password, :password_confirmation)
+  end
   
   def get_user
     @user = User.find_by(email: params[:email])
