@@ -69,4 +69,18 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to root_url
   end
+  
+  test "should redirect user to root from show if not activated" do
+    @admin.update_attribute(:activated, false)
+    get user_path(@admin)
+    assert_redirected_to root_url
+  end
+  
+  test "users path should not show users who are not activated" do
+    @non_admin.update_attribute(:activated, false)
+    log_in_as @admin
+    get users_path
+    assert_template 'users/index'
+    assert_select "a[href=?]",user_path(@non_admin), count:0
+  end
 end
