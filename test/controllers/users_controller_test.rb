@@ -3,7 +3,7 @@ require 'test_helper'
 class UsersControllerTest < ActionDispatch::IntegrationTest
   
   def setup 
-    @admin       = users(:michael)
+    @admin     = users(:michael)
     @non_admin = users(:archer)
   end
   
@@ -82,5 +82,15 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get users_path
     assert_template 'users/index'
     assert_select "a[href=?]",user_path(@non_admin), count:0
+  end
+  
+  test "should redirect following when not logged in" do
+    get following_user_path(@admin)
+    assert_redirected_to login_url
+  end
+  
+  test "should redirect followers when not logged in" do
+    get followers_user_path(@admin)
+    assert_redirected_to login_url
   end
 end
